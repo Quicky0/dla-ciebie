@@ -1,0 +1,588 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dla Ciebie ❤️</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            color: white;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(120, 160, 190, 0.25),
+                    transparent 40%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(125, 85, 55, 0.25),
+                    transparent 40%
+                ),
+                linear-gradient(
+                    135deg,
+                    #102a43,
+                    #1d4059 50%,
+                    #4b3025
+                );
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "♥";
+            position: fixed;
+            color: rgba(255, 255, 255, 0.08);
+            font-size: 180px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::before {
+            top: -50px;
+            left: -30px;
+            transform: rotate(-15deg);
+        }
+
+        body::after {
+            right: -20px;
+            bottom: -70px;
+            transform: rotate(15deg);
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 700px;
+            padding: 45px 30px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.20);
+            border-radius: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.30);
+        }
+
+        .subtitle {
+            margin-bottom: 10px;
+            color: #e6d5c3;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 38px;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .instruction {
+            margin-bottom: 35px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 15px;
+        }
+
+        .envelope-area {
+            position: relative;
+            width: 360px;
+            max-width: 100%;
+            height: 280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .envelope {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 360px;
+            max-width: 100%;
+            height: 220px;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            perspective: 1000px;
+            transition:
+                transform 0.8s ease,
+                opacity 0.8s ease;
+        }
+
+        .envelope:hover {
+            transform: translate(-50%, -50%) translateY(-5px);
+        }
+
+        .envelope-back {
+            position: absolute;
+            inset: 0;
+            background: #76513d;
+            border-radius: 8px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .envelope-front {
+            position: absolute;
+            inset: 0;
+            background: #76513d;
+            clip-path: polygon(
+                0 0,
+                50% 55%,
+                100% 0,
+                100% 100%,
+                0 100%
+            );
+            border-radius: 8px;
+            z-index: 3;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #8b614a;
+            clip-path: polygon(
+                0 0,
+                100% 0,
+                50% 58%
+            );
+            transform-origin: top center;
+            z-index: 5;
+            transition: transform 0.8s ease;
+        }
+
+        .heart-seal {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            color: white;
+            background: #315d7a;
+            font-size: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+            z-index: 6;
+            transition:
+                opacity 0.3s ease,
+                transform 0.5s ease;
+        }
+
+        /* Kartka z listem */
+
+        .paper {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+
+            width: 40px;
+            height: 40px;
+            max-height: 85vh;
+
+            padding: 45px;
+
+            background: #fffdf8;
+            color: #4b3025;
+            border-radius: 6px;
+
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.08);
+            transform-origin: center;
+
+            z-index: 50;
+            pointer-events: none;
+
+            overflow-x: hidden;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.40);
+
+            transition:
+                width 0.8s ease,
+                opacity 0.5s ease,
+                transform 0.8s ease;
+        }
+
+        .paper-content {
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.7s ease 0.6s;
+        }
+
+        .paper h2 {
+            margin-bottom: 30px;
+            color: #315d7a;
+            font-size: 30px;
+            text-align: center;
+        }
+
+        .paper .date {
+            margin-bottom: 30px;
+            color: #76513d;
+            font-size: 14px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .paper p {
+            margin-bottom: 22px;
+            font-size: 16px;
+            line-height: 1.9;
+            text-align: left;
+            overflow-wrap: break-word;
+        }
+
+        .paper .signature {
+            margin-top: 45px;
+            margin-bottom: 0;
+            color: #76513d;
+            font-size: 17px;
+            font-weight: bold;
+            line-height: 1.6;
+            text-align: right;
+        }
+
+        .paper .final-heart {
+            margin-top: 25px;
+            margin-bottom: 10px;
+            color: #315d7a;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        /* Przycisk powrotu */
+
+        .back-button {
+            display: block;
+            width: fit-content;
+            max-width: 100%;
+            margin: 25px auto 5px;
+            padding: 15px 25px;
+
+            color: #ffffff;
+            background: #315d7a;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 14px;
+
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+
+            box-shadow: 0 8px 20px rgba(20, 60, 90, 0.25);
+
+            transition:
+                background 0.25s ease,
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .back-button:hover {
+            background: #3d7192;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(20, 60, 90, 0.35);
+        }
+
+        .back-button:active {
+            transform: scale(0.97);
+        }
+
+        /* Otwieranie koperty */
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope.open .heart-seal {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+        }
+
+        .envelope.open {
+            opacity: 0;
+            transform:
+                translate(-50%, -50%)
+                translateY(20px)
+                scale(0.9);
+            pointer-events: none;
+        }
+
+        .paper.show {
+            width: min(650px, calc(100vw - 40px));
+            height: auto;
+            max-height: 85vh;
+
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+
+            pointer-events: auto;
+            overflow-y: auto;
+        }
+
+        .paper.show .paper-content {
+            opacity: 1;
+        }
+
+        .open-text {
+            position: absolute;
+            left: 50%;
+            bottom: -25px;
+            width: 100%;
+            margin: 0;
+            transform: translateX(-50%);
+            color: #e6d5c3;
+            font-size: 14px;
+            transition: opacity 0.4s ease;
+        }
+
+        .envelope.open ~ .open-text {
+            opacity: 0;
+        }
+
+        /* Telefony */
+
+        @media (max-width: 600px) {
+            body {
+                align-items: flex-start;
+                padding: 20px 12px;
+            }
+
+            .container {
+                padding: 40px 15px;
+                margin-bottom: 20px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            .envelope-area {
+                width: 300px;
+                height: 250px;
+            }
+
+            .envelope {
+                width: 300px;
+                height: 185px;
+            }
+
+            .paper {
+                padding: 30px 22px;
+            }
+
+            .paper.show {
+                width: calc(100vw - 24px);
+                max-height: 88vh;
+                padding: 28px 22px;
+
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            .paper h2 {
+                font-size: 25px;
+                margin-bottom: 22px;
+            }
+
+            .paper .date {
+                font-size: 12px;
+                margin-bottom: 24px;
+            }
+
+            .paper p {
+                font-size: 14px;
+                line-height: 1.8;
+                margin-bottom: 18px;
+            }
+
+            .paper .signature {
+                font-size: 15px;
+            }
+
+            .back-button {
+                padding: 14px 18px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .paper.show {
+                max-height: 90vh;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <p class="subtitle">
+            Mam coś dla Ciebie
+        </p>
+
+        <h1>
+            Otwórz list ❤️
+        </h1>
+
+        <p class="instruction">
+            Kliknij w kopertę
+        </p>
+
+        <div class="envelope-area">
+
+            <div
+                class="envelope"
+                id="envelope"
+                onclick="openEnvelope()"
+                role="button"
+                tabindex="0"
+                aria-label="Otwórz kopertę"
+                onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openEnvelope(); }"
+            >
+                <div class="envelope-back"></div>
+                <div class="envelope-flap"></div>
+                <div class="envelope-front"></div>
+
+                <div class="heart-seal">
+                    ♥
+                </div>
+            </div>
+
+            <p class="open-text">
+                Kliknij kopertę, aby ją otworzyć ❤️
+            </p>
+
+        </div>
+
+        <div class="paper" id="paper">
+
+            <div class="paper-content">
+
+                <h2>
+                    Dla Ciebie ❤️
+                </h2>
+
+                <p class="date">
+                    NASZA ROCZNICA
+                </p>
+
+                <p>
+                    Kotek,
+                </p>
+
+                <p>
+                    Dzisiaj mija pół roku, odkąd jesteśmy razem. Niewiarygodne jest dla mnie to, że mam kogoś takiego przy sobie. Napiszę Ci tutaj wszystko, co czuję i co chcę, żebyś wiedziała. Łatwiej jest mi to napisać, niż powiedzieć Ci prosto w twarz.
+                </p>
+
+                <p>
+                    Na początku miała to być normalna relacja, po prostu koledzy. Do dzisiaj pamiętam te noce spędzone na pisaniu o największych pierdołach, a jeszcze bardziej pamiętam to, jak walczyłem z własnym organizmem, żeby nie zasnąć... Później, z biegiem czasu, poczułem do Ciebie faktycznie coś więcej. Punktem szczytowym był moment, gdy mogłem stracić naszą relację. Wtedy już wiedziałem, że to coś więcej niż przyjaźń, ale bałem się do tego przyznać... Na szczęście pojawiła się Martyna i pomysł picia. Czego się nasłuchałem, to się nasłuchałem, ale i tak byłem najszczęśliwszy, bo usłyszałem „kocham Cię”.
+                </p>
+
+                <p>
+                    Dziś, kiedy to piszę, jesteś dla mnie kimś najważniejszym. Patrząc na Ciebie, wiem, że trafiłem najlepiej, jak tylko mogłem. Wpatruję się w Ciebie, a Ty bez przerwy pytasz: „Co?”, mimo że moja odpowiedź brzmi „nic”. W głębi duszy czuję jednak, że mam przed sobą najpiękniejszą, najcudowniejszą i najlepszą dziewczynę na świecie, z którą chcę być już na zawsze.
+                </p>
+
+                <p>
+                    Gdy patrzę na Ciebie, po prostu jestem szczęśliwy, że akurat Ty jesteś osobą, z którą mogę przeżywać to wszystko. Może nie zawsze pokazuję Ci to tak mocno, jak powinienem, ale naprawdę doceniam to, że jesteś w moim życiu.
+                </p>
+
+                <p>
+                    Dziękuję Ci za to, że jesteś. Dziękuję za każdy dzień, za każdą rozmowę, za każde spotkanie, za każdy wyjazd i tak dalej, i tak dalej... Dzięki Tobie po raz pierwszy poczułem się wyjątkowy. Po raz pierwszy poczułem, że ktoś może mnie pokochać pomimo wszystkich moich wad.
+                </p>
+
+                <p>
+                    Dziękuję Ci przede wszystkim za to, że jesteś. Chcę, żebyś zawsze pamiętała, że jesteś dla mnie naprawdę ważna. Nawet jeśli czasami nie potrafię tego odpowiednio pokazać, moje uczucia do Ciebie są czymś, co traktuję naprawdę poważnie.
+                </p>
+
+                <p>
+                    Wiem, że nie zawsze wszystko robię idealnie. Wiem, że czasami powiem coś nie tak, potrafię czegoś nie zauważyć albo zachować się inaczej, niż byś chciała. Było już pełno takich momentów i, znając życie, jeszcze wiele razy popełnię jakiś błąd. Ale chcę, żebyś wiedziała, że naprawdę mi na Tobie zależy i że chcę się uczyć Ciebie, rozumieć Cię coraz lepiej i być dla Ciebie coraz lepszym chłopakiem.
+                </p>
+
+                <p>
+                    Chcę też, żebyś wiedziała, że możesz na mnie liczyć. Nie tylko wtedy, kiedy jest dobrze. Będę przy Tobie, nieważne, co by się działo. Chcę być osobą, do której możesz przyjść, kiedy coś Cię martwi, kiedy jesteś smutna, zdenerwowana albo kiedy po prostu potrzebujesz kogoś obok. Nie zawsze będę wiedział, co powiedzieć, i nie zawsze będę potrafił naprawić to, co Cię boli, ale mogę Cię wysłuchać, przytulić i zostać z Tobą. Czasami może właśnie tego najbardziej potrzeba.
+                </p>
+
+                <p>
+                    Nie wiem dokładnie, co przyniesie przyszłość. Nie wiem, gdzie będziemy za rok, dwa czy pięć lat. Ale wiem, że na ten moment bardzo chcę, żebyś była częścią mojego życia. Chcę poznawać Cię jeszcze bardziej, przeżywać z Tobą kolejne rzeczy i zobaczyć, dokąd nas to wszystko zaprowadzi.
+                </p>
+
+                <p>
+                    Cieszę się z każdego naszego wspomnienia i liczę, że będzie ich dużo, dużo więcej. Chcę przeżyć z Tobą jeszcze mnóstwo pierwszych razy, ale też tysiące tych zwykłych dni, które z Tobą wcale nie są zwykłe.
+                </p>
+
+                <p>
+                    Nie wiem, co dokładnie czeka nas dalej, ale wiem, że chcę dalej iść przez to wszystko właśnie z Tobą. Chcę być przy Tobie, kiedy jest dobrze, ale też wtedy, kiedy jest źle. Chcę się z Tobą śmiać, wygłupiać, kłócić, godzić, podróżować, tworzyć kolejne wspomnienia i po prostu być.
+                </p>
+
+                <p>
+                    Kocham Cię, Kotek. I dziękuję Ci za moje najlepsze pół roku ❤️
+                </p>
+
+                <div class="final-heart">
+                    ♥
+                </div>
+
+                <a href="main.html" class="back-button">
+                    ← Wróć do naszej strony ❤️
+                </a>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function openEnvelope() {
+            const envelope = document.getElementById("envelope");
+            const paper = document.getElementById("paper");
+
+            if (envelope.classList.contains("open")) {
+                return;
+            }
+
+            envelope.classList.add("open");
+
+            setTimeout(() => {
+                paper.classList.add("show");
+            }, 850);
+        }
+    </script>
+
+</body>
+</html>

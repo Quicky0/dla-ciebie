@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Wpisz kod ❤️</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+
+            font-family: Arial, sans-serif;
+            color: #fff;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(120, 160, 190, 0.25),
+                    transparent 40%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(125, 85, 55, 0.25),
+                    transparent 40%
+                ),
+                linear-gradient(
+                    135deg,
+                    #102a43,
+                    #1d4059 50%,
+                    #4b3025
+                );
+
+            overflow: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "♥";
+            position: fixed;
+            color: rgba(255, 255, 255, 0.08);
+            font-size: 180px;
+            pointer-events: none;
+        }
+
+        body::before {
+            top: -50px;
+            left: -30px;
+            transform: rotate(-15deg);
+        }
+
+        body::after {
+            bottom: -70px;
+            right: -20px;
+            transform: rotate(15deg);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 45px 30px;
+
+            text-align: center;
+
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.20);
+            border-radius: 30px;
+
+            backdrop-filter: blur(15px);
+
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.30);
+        }
+
+        .subtitle {
+            margin-bottom: 15px;
+
+            color: #e6d5c3;
+
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+
+            font-size: 40px;
+
+            text-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .description {
+            margin-bottom: 25px;
+
+            color: rgba(255, 255, 255, 0.75);
+
+            font-size: 16px;
+        }
+
+        .heart {
+            display: inline-block;
+
+            margin-bottom: 25px;
+
+            color: #d8b49a;
+
+            font-size: 30px;
+
+            animation: heartbeat 1.8s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        .code-display {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+        .dot {
+            width: 18px;
+            height: 18px;
+
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+
+            transition: 0.2s ease;
+        }
+
+        .dot.active {
+            background: #ffffff;
+            border-color: #ffffff;
+
+            box-shadow:
+                0 0 12px rgba(255, 255, 255, 0.5);
+        }
+
+        .keypad {
+            display: grid;
+
+            grid-template-columns: repeat(3, 70px);
+
+            justify-content: center;
+
+            gap: 12px;
+        }
+
+        .key {
+            width: 70px;
+            height: 60px;
+
+            border: none;
+            border-radius: 14px;
+
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.14);
+
+            font-size: 20px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.15s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .key:hover {
+            background: rgba(255, 255, 255, 0.22);
+
+            transform: translateY(-2px);
+        }
+
+        .key:active {
+            transform: scale(0.94);
+        }
+
+        .delete {
+            color: #e6d5c3;
+            background: rgba(118, 81, 61, 0.65);
+        }
+
+        .confirm {
+            width: 100%;
+            max-width: 250px;
+
+            margin-top: 25px;
+            padding: 15px 25px;
+
+            border: none;
+            border-radius: 14px;
+
+            color: #ffffff;
+            background: #315d7a;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 20px rgba(20, 60, 90, 0.35);
+
+            transition:
+                transform 0.25s ease,
+                background 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .confirm:hover {
+            background: #3d7192;
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 12px 25px rgba(20, 60, 90, 0.45);
+        }
+
+        .message {
+            min-height: 22px;
+
+            margin-top: 15px;
+
+            color: #d8b49a;
+
+            font-size: 14px;
+        }
+
+        .shake {
+            animation: shake 0.35s ease;
+        }
+
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-8px);
+            }
+
+            75% {
+                transform: translateX(8px);
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .container {
+                padding: 40px 20px;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .keypad {
+                grid-template-columns: repeat(3, 65px);
+                gap: 10px;
+            }
+
+            .key {
+                width: 65px;
+                height: 58px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <p class="subtitle">
+            Mała zagadka
+        </p>
+
+        <h1>
+            Jaki jest kod? ❤️
+        </h1>
+
+        <p class="description">
+            Wpisz 4 cyfry, a następnie potwierdź.
+        </p>
+
+        <span class="heart">
+            ♥
+        </span>
+
+        <div class="code-display">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+
+        <div class="keypad">
+
+            <button class="key" onclick="addNumber('1')">1</button>
+            <button class="key" onclick="addNumber('2')">2</button>
+            <button class="key" onclick="addNumber('3')">3</button>
+
+            <button class="key" onclick="addNumber('4')">4</button>
+            <button class="key" onclick="addNumber('5')">5</button>
+            <button class="key" onclick="addNumber('6')">6</button>
+
+            <button class="key" onclick="addNumber('7')">7</button>
+            <button class="key" onclick="addNumber('8')">8</button>
+            <button class="key" onclick="addNumber('9')">9</button>
+
+            <button class="key delete" onclick="deleteNumber()">⌫</button>
+            <button class="key" onclick="addNumber('0')">0</button>
+            <button class="key delete" onclick="clearCode()">C</button>
+
+        </div>
+
+        <button class="confirm" onclick="checkCode()">
+            POTWIERDŹ ❤️
+        </button>
+
+        <p class="message" id="message"></p>
+
+    </main>
+
+    <script>
+        let code = "";
+
+        const correctCode = "2004";
+
+        const dots = document.querySelectorAll(".dot");
+        const message = document.getElementById("message");
+        const container = document.querySelector(".container");
+
+        function updateDisplay() {
+            dots.forEach((dot, index) => {
+                dot.classList.toggle("active", index < code.length);
+            });
+        }
+
+        function addNumber(number) {
+            if (code.length >= 4) {
+                return;
+            }
+
+            code += number;
+
+            message.textContent = "";
+
+            updateDisplay();
+        }
+
+        function deleteNumber() {
+            code = code.slice(0, -1);
+
+            message.textContent = "";
+
+            updateDisplay();
+        }
+
+        function clearCode() {
+            code = "";
+
+            message.textContent = "";
+
+            updateDisplay();
+        }
+
+        function checkCode() {
+            if (code.length !== 4) {
+                message.textContent = "Wpisz cały 4-cyfrowy kod ❤️";
+
+                container.classList.remove("shake");
+
+                void container.offsetWidth;
+
+                container.classList.add("shake");
+
+                return;
+            }
+
+            if (code === correctCode) {
+                message.textContent = "Poprawny kod ❤️";
+
+                setTimeout(() => {
+                    window.location.href = "main.html";
+                }, 700);
+
+                return;
+            }
+
+            message.textContent = "To nie ten kod... spróbuj jeszcze raz ❤️";
+
+            container.classList.remove("shake");
+
+            void container.offsetWidth;
+
+            container.classList.add("shake");
+
+            code = "";
+
+            updateDisplay();
+        }
+    </script>
+
+</body>
+
+</html>
+
