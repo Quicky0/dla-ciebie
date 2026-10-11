@@ -1077,6 +1077,8 @@ footer {
 
   </div>
 
+  <audio id="muzyka"></audio>
+
   <script>
     // =========================================
     // 1. LICZNIK CZASU
@@ -1302,6 +1304,39 @@ footer {
 
     // Załaduj pierwsze zdjęcie i podpis.
     showPhoto(0);
+
+
+
+    const piosenki = [
+    "muzyka1.mp3",
+    "muzyka2.mp3",
+    "muzyka3.mp3"
+];
+
+let aktualnaPiosenka = 0;
+const audio = document.getElementById("muzyka");
+
+function odtworzPiosenke() {
+    audio.src = piosenki[aktualnaPiosenka];
+    audio.play().catch(() => {});
+}
+
+function wlaczMuzyke() {
+    audio.play().catch(() => {});
+}
+
+audio.addEventListener("ended", () => {
+    aktualnaPiosenka++;
+
+    if (aktualnaPiosenka >= piosenki.length) {
+        aktualnaPiosenka = 0;
+    }
+
+    odtworzPiosenke();
+});
+
+// Próba automatycznego odtworzenia po otwarciu strony
+odtworzPiosenke();
   </script>
 
 </body>
